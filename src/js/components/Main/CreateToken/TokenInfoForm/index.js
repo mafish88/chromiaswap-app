@@ -27,7 +27,7 @@ const TokenInfoForm = ({ callback }) => {
 
 				<div className="form-group mb-4">
 					<label htmlFor="InitialSupply">Initial Supply</label>
-					<input type="number" className="form-control" id="initialSupply" placeholder="Insert the initial of tokens available. Will be put in your account."
+					<input type="number" min="0" className="form-control" id="initialSupply" placeholder="Insert the initial of tokens available. Will be put in your account."
 						{...register("initialSupply", { required: true })}
 						onKeyPress={(event) => {
 							if (!/[0-9]/.test(event.key)) {
