@@ -39,7 +39,7 @@ const TokenInfoForm = ({ callback }) => {
 				</div>
 				<br />
 				<div className="d-flex align-items-center justify-content-end">
-					<input type="submit" name="Next" value="Continue" className="btn btn-primary" />
+					<input type="submit" name="Next" value="Submit" className="btn btn-primary" />
 				</div>
 			</form>
 		</div>

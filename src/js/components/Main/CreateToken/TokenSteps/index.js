@@ -13,7 +13,7 @@ const TokenSteps = () => {
 							</div>
 							<div className="text-left">
 								<p className="text-xs text-slate-400 dark:text-navy-300" style={{marginBottom: '0.3rem'}}>
-									Step 1/4
+									Step 1/1
 								</p>
 								<h3 className="text-base font-medium text-primary dark:text-accent-light">
 									Basic Information

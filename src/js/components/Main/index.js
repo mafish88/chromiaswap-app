@@ -18,7 +18,7 @@ const chainId = Buffer.from(
 
 const Main = () => {
 
-	const { changeIsConnected } = useContext(AppContext)
+	const { page, changeIsConnected } = useContext(AppContext)
 	const blockchain = useContext(BlockchainContext);
 	const { search } = useLocation()
 	const [tx, setTx] = useState(search && parse(search).rawTx);
@@ -84,11 +84,25 @@ const Main = () => {
 		}
 	}, []);
 
+	let mainContent = null
+	switch (page) {
+		case "createToken":
+			mainContent = <CreateToken callback={createTokenCallback} />
+			break;
+		case "swapToken":
+			mainContent = <CreateToken callback={createTokenCallback} />
+			break;
+		case "addLiquidity":
+			mainContent = <CreateToken callback={createTokenCallback} />
+			break;
+		default:
+			break
+	}
 	return (
 		<div className="hp-main-layout">
 			<Header />
 			{account ?
-				<CreateToken callback={createTokenCallback} /> :
+				mainContent :
 				<form className={"centered-form bg-black position-relative overflow-hidden vertical-center"} style={{ margin: 'auto' }}>
 					<div className={"row text-center"}>
 						<div className={"check_mark_img"}>
