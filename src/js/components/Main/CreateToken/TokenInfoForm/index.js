@@ -33,14 +33,16 @@ const TokenInfoForm = ({ callback }) => {
 				<div className="form-group mb-4">
 					<label htmlFor="InitialSupply">Initial Supply</label>
 					<input type="number" min="0" className="form-control" id="initialSupply" placeholder="Insert the initial of tokens available. Will be put in your account."
-						{...register("initialSupply", { required: true })}
+						{...register("initialSupply", { required: true, min: 1 })}
 						onKeyPress={(event) => {
 							if (!/[0-9]/.test(event.key)) {
 								event.preventDefault();
 							}
 						}}
 					/>
-					{errors.initialSupply && <span className="bg-error">This field is required</span>}
+					{errors.initialSupply && errors.initialSupply.type === 'required' && <span className="bg-error">This field is required</span>}
+					{errors.initialSupply && errors.initialSupply.type === 'min' && <span className="bg-error">Initial Supply must be greater than 0</span>}
+
 				</div>
 				<br />
 				<div className="d-flex align-items-center justify-content-end">
