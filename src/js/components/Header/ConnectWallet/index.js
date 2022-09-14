@@ -6,7 +6,7 @@ import { AppContext } from "../../../context/AppContext";
 
 const ConnectWallet = () => {
 	const blockchain = useContext(BlockchainContext)
-	const { isConnected } = useContext(AppContext)
+	const { chromia_account } = useContext(AppContext)
 
 	const login = () => {
 		const successUrl = `${window.location.origin}`;
@@ -18,7 +18,7 @@ const ConnectWallet = () => {
 		new SSO(blockchain).initiateLogin(successUrl, cancelUrl);
 	}
 	return (
-		<button onClick={login} className="btn btn-ghost btn-primary" style={{ width: 'auto' }}>{isConnected ? "Connected" : "Connect Wallet"}</button>
+		<button onClick={login} className="btn btn-ghost btn-primary" style={{ width: 'auto' }}>{chromia_account != null ? "Connected" : "Connect Wallet"}</button>
 	)
 }
 

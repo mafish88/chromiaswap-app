@@ -443,3 +443,7 @@ body.collapse-btn-none.collapsed-active .hp-sidebar-collapse-button {
     display: none;
   }
 }
+
+sidebar-item{
+  cursor: pointer;
+}

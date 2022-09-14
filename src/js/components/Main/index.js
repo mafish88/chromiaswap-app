@@ -4,25 +4,23 @@ import { useLocation } from "react-router-dom";
 import Footer from "../Footer"
 import Header from "../Header"
 import CreateToken from "./CreateToken"
-import { SSO, Asset, AssetBalance, Account } from "ft3-lib";
+import { SSO } from "ft3-lib";
 import BlockchainContext from "../../../lib/blockchain/blockchain-context";
 import connectWallet from "../../../img/Wallet-amico-blue.png";
-import { useForm } from "react-hook-form";
 import { AppContext } from "../../context/AppContext";
-
-const blockchainRID = process.env.REACT_APP_BLOCKCHAIN_RID;
-const chainId = Buffer.from(
-	blockchainRID,
-	'hex'
-);
+import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE } from "../../utils/constants";
+import AddLiquidity from "./AddLiquidity";
+import SwapToken from "./SwapToken";
+import TokenListPage from "./TokenListPage";
+import { setStoredAccount } from "../../../lib/account-storage";
 
 const Main = () => {
 
-	const { page, changeIsConnected } = useContext(AppContext)
+	const { page, chromia_account, setAccount } = useContext(AppContext)
 	const blockchain = useContext(BlockchainContext);
 	const { search } = useLocation()
 	const [tx, setTx] = useState(search && parse(search).rawTx);
-	const [account, setAccount] = useState(null);
+	const [componentKey, setComponentKey] = useState(Date.now())
 	const verifyAndSendTx = async () => {
 		if (!tx) {
 			return
@@ -31,39 +29,12 @@ const Main = () => {
 			const sso = new SSO(blockchain);
 			console.log("before finalize")
 			const [account, user] = await sso.finalizeLogin(tx)
+			setStoredAccount({ user, account })
 			console.log("after finalize")
 			localStorage.setItem("chromia_account", account.id.toString("hex"))
 			setAccount(account);
-			changeIsConnected(true)
 		} catch (e) {
 			console.error('Login error', e)
-			changeIsConnected(false);
-		}
-	}
-
-	const createOrGetTokenId = async (tokenName) => {
-		try {
-			const existingToken = await Asset.getByName(tokenName, blockchain)
-			if (existingToken.length === 0) {
-				const newToken = await Asset.register(tokenName, chainId, blockchain)
-				return newToken?.id
-			}
-			return existingToken[0].id
-		} catch (e) {
-			alert(JSON.stringify(e))
-		}
-	}
-
-	const createTokenCallback = async (data) => {
-		try {
-			const tokenId = await createOrGetTokenId(data?.tokenName)
-			console.log("Got token: ", tokenId)
-			await AssetBalance.giveBalance(account.id, tokenId, parseFloat(data?.initialSupply), blockchain)
-			return true
-		} catch (e) {
-			console.error(e)
-			alert(JSON.stringify(e))
-			return false
 		}
 	}
 
@@ -71,37 +42,39 @@ const Main = () => {
 		const loadedAccount = await blockchain.newSession(user).getAccountById(id)
 		// const loadedAccount = new Account(storedAccount.id_.data, storedAccount.authDescriptor, storedAccount.tx.session)
 		setAccount(loadedAccount)
-		changeIsConnected(true)
 	}
+
 	useEffect(() => {
 		let ft3_account = JSON.parse(localStorage.getItem('ft3_account'))
 		const accountIdString = localStorage.getItem('chromia_account')
-		if (ft3_account && accountIdString) {
+		if (tx && !chromia_account) {
+			verifyAndSendTx()
+		} else if (ft3_account && accountIdString) {
 			const storedAccount = Buffer.from(localStorage.getItem('chromia_account'), "hex")
 			loadAccount(ft3_account.user, storedAccount)
-		} else if (!account) {
-			verifyAndSendTx()
 		}
 	}, []);
 
 	let mainContent = null
 	switch (page) {
-		case "createToken":
-			mainContent = <CreateToken callback={createTokenCallback} />
+		case CREATE_TOKEN_PAGE:
+			mainContent = <CreateToken />
 			break;
-		case "swapToken":
-			mainContent = <CreateToken callback={createTokenCallback} />
+		case SWAP_TOKEN_PAGE:
+			mainContent = <SwapToken />
 			break;
-		case "addLiquidity":
-			mainContent = <CreateToken callback={createTokenCallback} />
+		case ADD_LIQUIDITY_PAGE:
+			mainContent = <AddLiquidity key={componentKey} setKey={setComponentKey} />
 			break;
+		case TOKEN_LIST_PAGE:
+			mainContent = <TokenListPage />
 		default:
 			break
 	}
 	return (
 		<div className="hp-main-layout">
 			<Header />
-			{account ?
+			{chromia_account ?
 				mainContent :
 				<form className={"centered-form bg-black position-relative overflow-hidden vertical-center"} style={{ margin: 'auto' }}>
 					<div className={"row text-center"}>

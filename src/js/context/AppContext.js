@@ -1,13 +1,14 @@
 import { createContext, useReducer } from "react";
+import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE } from "../utils/constants";
 
 const initialState = {
-	page: "createToken",
-	isConnected: false,
+	page: SWAP_TOKEN_PAGE,
+	chromia_account: null
 };
 
 const actions = {
 	CHANGE_PAGE: "CHANGE_PAGE",
-	CHANGE_IS_CONNECTED: "CHANGE_IS_CONNECTED",
+	SET_ACCOUNT: "SET_ACCOUNT"
 };
 
 
@@ -15,8 +16,8 @@ const reducer = (state, action) => {
 	switch (action.type) {
 		case actions.CHANGE_PAGE:
 			return { ...state, page: action.pageId };
-		case actions.CHANGE_IS_CONNECTED:
-			return { ...state, isConnected: action.isConnected };
+		case actions.SET_ACCOUNT:
+			return { ...state, chromia_account: action.chromia_account };
 		default:
 			return state;
 	}
@@ -29,12 +30,12 @@ export const AppContextProvider = ({ children }) => {
 
 	const value = {
 		page: state.page,
-		isConnected: state.isConnected,
+		chromia_account: state.chromia_account,
 		changePage: (pageId) => {
 			dispatch({ type: actions.CHANGE_PAGE, pageId });
 		},
-		changeIsConnected: (isConnected) => {
-			dispatch({ type: actions.CHANGE_IS_CONNECTED, isConnected });
+		setAccount: (chromia_account) => {
+			dispatch({ type: actions.SET_ACCOUNT, chromia_account });
 		}
 	};
 

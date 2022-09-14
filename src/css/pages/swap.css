@@ -1,0 +1,256 @@
+.dark .dark\:bg-light-dark {
+  --tw-bg-opacity: 1;
+  background-color: #141414;
+}
+
+.dark .dark\:text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219/var(--tw-text-opacity));
+}
+
+.dark .dark\:hover\:border-gray-600:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(75 85 99/var(--tw-border-opacity));
+}
+
+.dark .dark\:hover\:bg-gray-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: #000;
+}
+
+.dark .dark\:text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255/var(--tw-text-opacity));
+  background: #5bc8d3;
+}
+
+.w-3 {
+  width: 0.75rem;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.dark .dark\:bg-gray-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(75 85 99/var(--tw-bg-opacity));
+}
+
+.shadow-large {
+  --tw-shadow: 0px 8px 16px rgba(17, 24, 39, .1);
+  --tw-shadow-colored: 0px 8px 16px var(--tw-shadow-color);
+}
+
+.dark .dark\:border-gray-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81/var(--tw-border-opacity));
+}
+
+.shadow-card,
+.shadow-large {
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.bg-brand {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--color-brand)/var(--tw-bg-opacity));
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.absolute {
+  position: absolute;
+  left: 48%;
+  top: 38%;
+}
+
+.relative {
+  position: relative;
+}
+
+.gap-4 {
+  gap: 1rem !important;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex {
+  display: flex;
+}
+
+.exchange-coin {
+  background: transparent;
+  border: none;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.exchange-coin span {
+  margin: 0 5px;
+}
+
+.border-r {
+  border-right-width: 1px;
+  border-right: 1px solid
+}
+
+.pb-0\.5 {
+  padding-bottom: 0.125rem;
+}
+
+.exchange-value {
+  padding: 5px 10px;
+  color: #fff;
+}
+
+.pb-4 {
+  padding-bottom: 1rem !important;
+}
+
+.border-dashed {
+  border-style: dashed;
+}
+
+.border-b {
+  border-bottom-width: 1px;
+  border-left: 0px;
+  border-right: 0px;
+  border-top: 0px;
+}
+
+@media (max-width: 991px) {
+  .hp-profile-menu {
+    display: block;
+  }
+}
+
+.filter-border {
+  border: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(31 41 55/var(--tw-bg-opacity)) !important;
+}
+
+.modal .modal-dialog {
+  max-width: 440px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.modal-content {
+  background: #1E1F35;
+  padding: 0px;
+}
+
+.modal-content p {
+  font-size: 14px;
+}
+
+.modal-content .modal-header {
+  border: none;
+  padding-bottom: 8px;
+}
+
+.modal-content .modal-header i {
+  font-size: 15px;
+  color: #FFFFFF;
+}
+
+.modal-content .heading-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modal-content .heading-list li {
+  display: block;
+  background: #292A3F;
+  padding: 15px 30px;
+  margin-bottom: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.modal-content .heading-list li span {
+  width: 35px;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.modal-content .heading-list li::before {
+  content: "\e902";
+  position: absolute;
+  top: 22px;
+  right: 30px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "icomoon";
+  font-size: 10px;
+}
+
+.modal-content .heading-list li a {
+  color: #FFFFFF;
+  font-family: "Russo One", sans-serif;
+}
+
+.modal-content .modal-title {
+  color: #FFFFFF;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  font-weight: 600;
+}
+
+.modal-content .modal-title:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  -webkit-filter: blur(1px);
+  filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+  background: rgba(0, 0, 12, 0.8);
+}
+
+.modal-backdrop.in {
+  opacity: 1 !important;
+}
+
+.search-icon {
+  position: absolute;
+  margin-left: 15px;
+}
+
+.dark .dark\:bg-light-dark-1 {
+  --tw-bg-opacity: 1;
+  background-color: #000;
+}
+
+.search-input {
+  height: 45px;
+  border-radius: 10px;
+  padding-left: 45px;
+}
+
+.selected-token {
+  opacity: 0.3;
+}
+
+.token-list {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tokenSelector {
+  border: 0.1px solid #e5e7eb52 !important;
+}

@@ -18,8 +18,8 @@ export const getStoredAccount = () => {
   return null;
 }
 
-export const setStoredAccount = ({user, account}) => {
-  localStorage.setItem('ft3_account', 
+export const setStoredAccount = ({ user, account }) => {
+  localStorage.setItem('ft3_account',
     JSON.stringify({
       user,
       account

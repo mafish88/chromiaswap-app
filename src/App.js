@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import './css/bootstrap.css'
 import './css/base/font-control.css'
@@ -10,6 +9,7 @@ import './css/layouts/sider.css'
 import './css/layouts/header.css'
 import './css/components.css'
 import './css/pages/create-token.css'
+import './css/pages/swap.css'
 import SideBar from './js/components/SideBar';
 import { AppContextProvider } from './js/context/AppContext';
 import { BlockchainProvider } from './lib/blockchain/blockchain-context';

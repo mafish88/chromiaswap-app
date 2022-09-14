@@ -1,12 +1,17 @@
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { AppContext } from "../../../../context/AppContext";
+import { TOKEN_LIST_PAGE } from "../../../../utils/constants";
 const TokenInfoForm = ({ callback }) => {
 
 	const { register, handleSubmit, formState: { errors }, reset } = useForm();
+	const { changePage } = useContext(AppContext)
 
 	const onSubmit = async (data) => {
 		const isSuccess = await callback(data);
 		if (isSuccess) {
 			reset()
+			changePage(TOKEN_LIST_PAGE)
 		}
 	}
 	return (
