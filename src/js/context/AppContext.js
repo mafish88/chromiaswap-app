@@ -1,8 +1,8 @@
 import { createContext, useReducer } from "react";
-import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE } from "../utils/constants";
+import {TOKEN_LIST_PAGE } from "../utils/constants";
 
 const initialState = {
-	page: SWAP_TOKEN_PAGE,
+	page: TOKEN_LIST_PAGE,
 	chromia_account: null
 };
 

@@ -5,6 +5,7 @@ import { chainId } from "../../../utils/constants";
 import BlockchainContext from "../../../../lib/blockchain/blockchain-context";
 import { useContext } from "react";
 import { AppContext } from "../../../context/AppContext";
+import { toast } from 'react-toastify';
 
 const CreateToken = () => {
 	const blockchain = useContext(BlockchainContext);
@@ -19,8 +20,9 @@ const CreateToken = () => {
 				return newToken?.id
 			}
 			return existingToken[0].id
-		} catch (e) {
-			alert(JSON.stringify(e))
+		} catch (err) {
+			console.log(JSON.stringify(err))
+			toast(err.shortReason)
 		}
 	}
 
@@ -30,9 +32,9 @@ const CreateToken = () => {
 			console.log("Got token: ", tokenId)
 			await AssetBalance.giveBalance(chromia_account.id, tokenId, parseFloat(data?.initialSupply), blockchain)
 			return true
-		} catch (e) {
-			console.error(e)
-			alert(JSON.stringify(e))
+		} catch (err) {
+			console.log(JSON.stringify(err))
+			toast(err.shortReason)
 			return false
 		}
 	}

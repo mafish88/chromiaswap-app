@@ -1,6 +1,6 @@
 import { parse } from "query-string";
 import { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Footer from "../Footer"
 import Header from "../Header"
 import CreateToken from "./CreateToken"
@@ -20,7 +20,7 @@ const Main = () => {
 	const blockchain = useContext(BlockchainContext);
 	const { search } = useLocation()
 	const [tx, setTx] = useState(search && parse(search).rawTx);
-	const [componentKey, setComponentKey] = useState(Date.now())
+	const navigate = useNavigate();
 	const verifyAndSendTx = async () => {
 		if (!tx) {
 			return
@@ -33,6 +33,7 @@ const Main = () => {
 			console.log("after finalize")
 			localStorage.setItem("chromia_account", account.id.toString("hex"))
 			setAccount(account);
+			navigate("/", { replace: true })
 		} catch (e) {
 			console.error('Login error', e)
 		}
@@ -64,11 +65,13 @@ const Main = () => {
 			mainContent = <SwapToken />
 			break;
 		case ADD_LIQUIDITY_PAGE:
-			mainContent = <AddLiquidity key={componentKey} setKey={setComponentKey} />
+			mainContent = <AddLiquidity />
 			break;
 		case TOKEN_LIST_PAGE:
 			mainContent = <TokenListPage />
+			break;
 		default:
+			mainContent = <TokenListPage />
 			break
 	}
 	return (

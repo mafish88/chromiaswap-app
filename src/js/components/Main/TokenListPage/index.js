@@ -23,7 +23,7 @@ const TokenListPage = () => {
 
 	const tableRows = tokenList.map((token, index) => {
 		return (
-			<tr>
+			<tr key={index}>
 				<th scope="row"><span className="icon-star"></span></th>
 				<td>{index + 1}</td>
 				<td>
