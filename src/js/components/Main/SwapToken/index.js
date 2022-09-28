@@ -26,6 +26,7 @@ const SwapToken = () => {
 	const [slippageTolerance, setSlippageTolerance] = useState(0.1)
 	const [rate, setRate] = useState()
 	const [processing, setProcessing] = useState(false)
+	const [pairId, setPairId] = useState("")
 
 	const closeModal = () => {
 		setTokenListModalMode('hidden')
@@ -86,17 +87,35 @@ const SwapToken = () => {
 	}
 	const fetchPrice = async (first, second, amount, setter) => {
 		if (first && second && amount) {
-			const { current_price, quote } = await blockchain.query("ft3.get_price", {
-				first: first,
-				second: second,
-				amount: amount
-			})
-			setter(quote)
-			setRate(current_price)
+			try {
+				const priceTuple = await blockchain.query("ft3.get_price", {
+					first: first,
+					second: second,
+					amount: amount
+				})
+				setter(priceTuple?.quote)
+				setRate(priceTuple?.current_price)
+			} catch (err) {
+				console.log(err)
+				toast(err.shortReason)
+			}
 			setDisabledField("")
 		}
 	}
 
+	const checkPair = async (first, second) => {
+		try {
+			const resp = await blockchain.query("ft3.get_pair", {
+				a1: first,
+				a2: second,
+			})
+			setPairId(JSON.parse(resp)?.lp_id)
+		} catch (err) {
+			setPairId("")
+			setRate("")
+			toast("No liquidity found for pair")
+		}
+	}
 	useEffect(() => {
 		if (chromia_account) {
 			loadTokenList()
@@ -104,22 +123,29 @@ const SwapToken = () => {
 	}, [chromia_account?.id])
 
 	useEffect(() => {
-		console.log('In useEffect')
-		if (disabledField === TOKENAMOUNT1 && secondTokenAmount) {
-			fetchPrice(secondToken?.id, firstToken?.id, secondTokenAmount, setFirstTokenAmount)
-		} else if (disabledField === TOKENAMOUNT2 && firstTokenAmount) {
-			fetchPrice(firstToken?.id, secondToken?.id, firstTokenAmount, setSecondTokenAmount)
+		if (firstToken && secondToken) {
+			checkPair(firstToken?.id, secondToken?.id)
 		}
-	}, [disabledField, firstToken?.id, secondToken?.id])
+	}, [firstToken?.id.toString("hex"), secondToken?.id.toString("hex")])
+
+	useEffect(() => {
+		if (pairId) {
+			if ((disabledField === TOKENAMOUNT1 && secondTokenAmount) || !firstTokenAmount) {
+				fetchPrice(secondToken?.id, firstToken?.id, secondTokenAmount, setFirstTokenAmount)
+			} else if ((disabledField === TOKENAMOUNT2 && firstTokenAmount) || !secondTokenAmount) {
+				fetchPrice(firstToken?.id, secondToken?.id, firstTokenAmount, setSecondTokenAmount)
+			}
+		}
+	}, [disabledField, pairId])
 
 	let modalCallback = () => { }
 	if (tokenListModalMode === "TOKEN1") {
-		modalCallback = setFirstToken
+		modalCallback = (val) => { setFirstToken(val); setFirstTokenAmount("") }
 	} else if (tokenListModalMode === "TOKEN2") {
-		modalCallback = setSecondToken
+		modalCallback = (val) => { setSecondToken(val); setSecondTokenAmount("") }
 	}
 
-	const isValid = firstToken && secondToken && firstTokenAmount && secondTokenAmount
+	const isValid = firstToken && secondToken && firstTokenAmount && secondTokenAmount && pairId
 
 	return (
 		<LoadingOverlay
@@ -154,7 +180,7 @@ const SwapToken = () => {
 												setFirstTokenAmount(e.target.value);
 											}
 										}} />
-									<span className="font-xs px-3 text-gray-400">= $0.00</span>
+									{/* <span className="font-xs px-3 text-gray-400">= $0.00</span> */}
 								</div>
 							</div>
 							<div className="absolute top-1/2 left-1/2 z-[1] -mt-4 -ml-4 rounded-full shadow-large dark:bg-gray-600">
@@ -209,7 +235,7 @@ const SwapToken = () => {
 												setSecondTokenAmount(e.target.value);
 											}
 										}} />
-									<span className="font-xs px-3 text-gray-400">= $0.00</span>
+									{/* <span className="font-xs px-3 text-gray-400">= $0.00</span> */}
 								</div>
 							</div>
 						</div>
@@ -217,7 +243,7 @@ const SwapToken = () => {
 					<div className="flex flex-col gap-4 xs:gap-[18px]">
 						{rate && <div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">Rate</span><span>1 {firstToken?.name} = {rate} {secondToken?.name}</span></div>}
 						<div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">Price Slippage</span><span>{slippageTolerance}%</span></div>
-						{firstTokenAmount && <div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">Min. Received</span><span>{getMinReceived(secondTokenAmount, slippageTolerance)}</span></div>}
+						{rate && secondTokenAmount && <div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">Min. Received</span><span>{getMinReceived(secondTokenAmount, slippageTolerance)}</span></div>}
 						{/* <div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">Offered by</span><span>_ _</span></div> */}
 						{/* <div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">Network Fee</span><span>_ _</span></div> */}
 						{/* <div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">Criptic Fee</span><span>_ _</span></div> */}

@@ -22,7 +22,7 @@ const TokenInfoForm = ({ callback }) => {
 		}
 	}
 
-	console.log(errors)
+	// console.log(errors)
 	return (
 		<LoadingOverlay
 			active={processing}
@@ -38,29 +38,26 @@ const TokenInfoForm = ({ callback }) => {
 						<label htmlFor="Tokenname">Token Name</label>
 						<input type="text" className="form-control" id="tokenname" placeholder="Choose a name for your token (e.g. “ChromiaSwap”)"
 							{...register("tokenName", { required: true })} />
-						{errors.tokenName && <span className="bg-error">This field is required</span>}
 					</div>
 					<br />
-
+				
 					<div className="form-group mb-4">
 						<label htmlFor="InitialSupply">Initial Supply</label>
-						<input type="number" min="0" step="0.01" className="form-control" id="initialSupply" placeholder="Insert the initial supply of tokens available. Will be put in your account."
-							{...register("initialSupply", { required: true, min: 1 })}
+						<input type="number" step="any" min="0.01" className="form-control" id="initialSupply" placeholder="Insert the initial supply of tokens available. Will be put in your account."
+							{...register("initialSupply", { required: true, min: 1e-18, pattern: DECIMAL_REGEX })}
 							data-tip data-for="initalSupplyInput"
 							onMouseEnter={() => showTooltip(true)}
 							onMouseLeave={() => {
 								showTooltip(false);
 								setTimeout(() => showTooltip(true), 50);
 							}}
-							onChange={(event) => {
-								const amount = event.target.value;
-								if (!amount.match(DECIMAL_REGEX)) {
-									event.preventDefault();
-								}
-							}}
+							// onChange={(event) => {
+							// 	const amount = event.target.value;
+							// 	if (!amount.match(DECIMAL_REGEX)) {
+							// 		event.preventDefault();
+							// 	}
+							// }}
 						/>
-						{errors.initialSupply && errors.initialSupply.type === 'required' && <span className="bg-error">This field is required</span>}
-						{errors.initialSupply && errors.initialSupply.type === 'min' && <span className="bg-error">Initial Supply must be greater than 0</span>}
 
 					</div>
 					<br />
@@ -71,7 +68,7 @@ const TokenInfoForm = ({ callback }) => {
 				{
 					tooltip &&
 					<ReactTooltip id="initalSupplyInput">
-						<span>Inital Supply must be greater than 0</span>
+						<span>Inital Supply must be greater than 0. Maximum 18 decimal places allowed</span>
 					</ReactTooltip>
 				}
 			</div>

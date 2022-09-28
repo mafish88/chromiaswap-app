@@ -64,7 +64,6 @@ const AddLiquidity = ({ setKey }) => {
 	}
 
 	const isValid = firstToken && secondToken && firstTokenAmount && secondTokenAmount
-	console.log(isValid)
 
 	return (
 		<LoadingOverlay

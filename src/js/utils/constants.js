@@ -9,4 +9,4 @@ export const chainId = Buffer.from(
 	'hex'
 );
 
-export const DECIMAL_REGEX = /^\d{1,}(\.\d{0,4})?$/
+export const DECIMAL_REGEX = /^\d{1,}(\.\d{0,18})?$/
