@@ -8,3 +8,5 @@ export const chainId = Buffer.from(
 	blockchainRID,
 	'hex'
 );
+
+export const DECIMAL_REGEX = /^\d{1,}(\.\d{0,4})?$/

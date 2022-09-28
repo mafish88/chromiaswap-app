@@ -4,11 +4,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Footer from "../Footer"
 import Header from "../Header"
 import CreateToken from "./CreateToken"
-import { SSO } from "ft3-lib";
+import { Asset, AssetBalance, nop, op, SSO } from "ft3-lib";
 import BlockchainContext from "../../../lib/blockchain/blockchain-context";
 import connectWallet from "../../../img/Wallet-amico-blue.png";
 import { AppContext } from "../../context/AppContext";
-import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE } from "../../utils/constants";
+import { ADD_LIQUIDITY_PAGE, chainId, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE } from "../../utils/constants";
 import AddLiquidity from "./AddLiquidity";
 import SwapToken from "./SwapToken";
 import TokenListPage from "./TokenListPage";
@@ -38,6 +38,7 @@ const Main = () => {
 			console.error('Login error', e)
 		}
 	}
+
 
 	const loadAccount = async (user, id) => {
 		const loadedAccount = await blockchain.newSession(user).getAccountById(id)

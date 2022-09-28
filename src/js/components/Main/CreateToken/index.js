@@ -30,7 +30,7 @@ const CreateToken = () => {
 		try {
 			const tokenId = await createOrGetTokenId(data?.tokenName)
 			console.log("Got token: ", tokenId)
-			await AssetBalance.giveBalance(chromia_account.id, tokenId, parseFloat(data?.initialSupply), blockchain)
+			await AssetBalance.giveBalance(chromia_account.id, tokenId, data?.initialSupply, blockchain)
 			return true
 		} catch (err) {
 			console.log(JSON.stringify(err))

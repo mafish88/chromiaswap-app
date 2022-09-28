@@ -18,6 +18,9 @@ import Main from './js/components/Main';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import LoadingOverlay from "react-loading-overlay";
+
+LoadingOverlay.propTypes = undefined
 
 function App() {
   SSO.vaultUrl = process.env.REACT_APP_VAULT_URL;

@@ -17,8 +17,18 @@ const ConnectWallet = () => {
 
 		new SSO(blockchain).initiateLogin(successUrl, cancelUrl);
 	}
+
+	// const logout = () => {
+	// 	new SSO(blockchain).logout();
+
+	// }
 	return (
-		<button onClick={login} className="btn btn-ghost btn-primary" style={{ width: 'auto' }}>{chromia_account != null ? "Connected" : "Connect Wallet"}</button>
+		<>
+			{chromia_account != null ?
+				<button className="btn btn-ghost btn-primary" style={{ width: 'auto' }}>Connected</button> :
+				<button onClick={login} className="btn btn-ghost btn-primary" style={{ width: 'auto' }}>Connect Wallet</button>
+			}
+		</>
 	)
 }
 

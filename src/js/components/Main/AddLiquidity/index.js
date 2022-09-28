@@ -5,10 +5,11 @@ import TokenListModal from "../TokenListModal"
 import { AssetBalance, nop, op, SingleSignatureAuthDescriptor } from "ft3-lib";
 import BlockchainContext from "../../../../lib/blockchain/blockchain-context";
 import { getStoredAccount } from "../../../../lib/account-storage";
-import { TOKEN_LIST_PAGE } from "../../../utils/constants";
+import { DECIMAL_REGEX, TOKEN_LIST_PAGE } from "../../../utils/constants";
 import LoadingOverlay from "react-loading-overlay";
 import { PuffLoader } from "react-spinners";
 import { toast } from 'react-toastify';
+import ReactTooltip from "react-tooltip";
 
 const AddLiquidity = ({ setKey }) => {
 	const [firstToken, setFirstToken] = useState(null)
@@ -20,6 +21,7 @@ const AddLiquidity = ({ setKey }) => {
 	const { chromia_account, changePage } = useContext(AppContext)
 	const blockchain = useContext(BlockchainContext);
 	const [processing, setProcessing] = useState(false)
+	const [tooltip, showTooltip] = useState(true);
 
 	const closeModal = () => {
 		setTokenListModalMode('hidden')
@@ -36,7 +38,7 @@ const AddLiquidity = ({ setKey }) => {
 		try {
 			const storedAccount = getStoredAccount()
 			console.log(await blockchain.transactionBuilder()
-				.add(op("ft3.add_liq", firstToken.id, secondToken.id, parseInt(firstTokenAmount), parseInt(secondTokenAmount), storedAccount.user.authDescriptor.id, chromia_account.id))
+				.add(op("ft3.add_liq", firstToken.id, secondToken.id, firstTokenAmount, secondTokenAmount, storedAccount.user.authDescriptor.id, chromia_account.id))
 				.add(nop())
 				.buildAndSign(storedAccount.user).post())
 			changePage(TOKEN_LIST_PAGE)
@@ -66,6 +68,7 @@ const AddLiquidity = ({ setKey }) => {
 
 	return (
 		<LoadingOverlay
+			className="hp-main-layout-content"
 			active={processing}
 			spinner={<PuffLoader color={"#5bc8d3"} />}>
 			<CommonTokenSelector >
@@ -83,17 +86,18 @@ const AddLiquidity = ({ setKey }) => {
 									</button>
 								</div>
 								<div className="flex flex-1 flex-col text-right">
-									<input disabled={!firstToken} type="text" placeholder="0" inputMode="numeric"
+									<input disabled={!firstToken} type="text" placeholder="0.0" inputMode="numeric"
 										className="w-full rounded-tr-lg rounded-br-lg border-0 exchange-value pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
 										value={firstTokenAmount}
 										onChange={(e) => {
-											setFirstTokenAmount(e.target.value ? parseInt(e.target.value) : '');
-										}}
-										onKeyPress={(event) => {
-											if (!/[0-9]/.test(event.key)) {
-												event.preventDefault();
+											const amount = e.target.value;
+											if (amount === '') {
+												setFirstTokenAmount('')
+											} else if (amount.match(DECIMAL_REGEX)) {
+												setFirstTokenAmount(e.target.value);
 											}
-										}} />
+										}}
+									/>
 									{/* <span className="font-xs px-3 text-gray-400">= $0.00</span> */}
 								</div>
 							</div>
@@ -128,17 +132,19 @@ const AddLiquidity = ({ setKey }) => {
 									</button>
 								</div>
 								<div className="flex flex-1 flex-col text-right">
-									<input disabled={!secondToken} type="text" placeholder="0" inputMode="numeric"
+									<input
+										disabled={!secondToken} type="text" placeholder="0.0" inputMode="numeric"
 										className="w-full rounded-tr-lg rounded-br-lg border-0 exchange-value pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
 										value={secondTokenAmount}
 										onChange={(e) => {
-											setSecondTokenAmount(e.target.value ? parseInt(e.target.value) : '');
-										}}
-										onKeyPress={(event) => {
-											if (!/[0-9]/.test(event.key)) {
-												event.preventDefault();
+											const amount = e.target.value;
+											if (amount === '') {
+												setSecondTokenAmount('')
+											} else if (amount.match(DECIMAL_REGEX)) {
+												setSecondTokenAmount(e.target.value);
 											}
-										}} />
+										}}
+									/>
 									{/* <span className="font-xs px-3 text-gray-400">= $0.00</span> */}
 								</div>
 							</div>
@@ -151,6 +157,12 @@ const AddLiquidity = ({ setKey }) => {
 					<br />
 					<button
 						disabled={!isValid}
+						data-tip data-for="addLiquidityBtn"
+						onMouseEnter={() => showTooltip(true)}
+						onMouseLeave={() => {
+							showTooltip(false);
+							setTimeout(() => showTooltip(true), 50);
+						}}
 						className="btn relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm bg-brand border-brand hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none w-full text-white rounded-md sm:rounded-lg px-7 sm:px-9 h-11 sm:h-13 mt-6 xs:mt-8 xs:tracking-widest"
 						style={{ background: '#5bc8d3', fontSize: '20px' }} onClick={() => addLiquidity()}><span className="">Add Liquidity</span></button>
 				</div>
@@ -161,6 +173,12 @@ const AddLiquidity = ({ setKey }) => {
 					tokenList={tokenList}
 					firstToken={firstToken}
 					secondToken={secondToken} />
+				{
+					tooltip &&
+					<ReactTooltip id="addLiquidityBtn">
+						<span>Inital Liquidity (Square root(AmountA * AmountB)) must be greater than 1000000</span>
+					</ReactTooltip>
+				}
 			</CommonTokenSelector >
 		</LoadingOverlay>
 	)

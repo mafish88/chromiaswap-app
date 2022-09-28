@@ -3,12 +3,15 @@ import { useForm } from "react-hook-form";
 import LoadingOverlay from "react-loading-overlay";
 import { PuffLoader } from "react-spinners";
 import { AppContext } from "../../../../context/AppContext";
-import { TOKEN_LIST_PAGE } from "../../../../utils/constants";
+import { DECIMAL_REGEX, TOKEN_LIST_PAGE } from "../../../../utils/constants";
+import ReactTooltip from "react-tooltip";
+
 const TokenInfoForm = ({ callback }) => {
 
 	const { register, handleSubmit, formState: { errors, isValid } } = useForm({ mode: "onChange" });
 	const { changePage } = useContext(AppContext)
 	const [processing, setProcessing] = useState(false)
+	const [tooltip, showTooltip] = useState(true);
 
 	const onSubmit = async (data) => {
 		setProcessing(true)
@@ -23,7 +26,7 @@ const TokenInfoForm = ({ callback }) => {
 	return (
 		<LoadingOverlay
 			active={processing}
-			spinner={<PuffLoader color={"#5bc8d3"}/>}>
+			spinner={<PuffLoader color={"#5bc8d3"} />}>
 			<div className="col ps-16 ps-sm-32 py-24 py-sm-32 overflow-hidden">
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<h3>Basic token information.</h3>
@@ -41,10 +44,17 @@ const TokenInfoForm = ({ callback }) => {
 
 					<div className="form-group mb-4">
 						<label htmlFor="InitialSupply">Initial Supply</label>
-						<input type="number" min="0" className="form-control" id="initialSupply" placeholder="Insert the initial supply of tokens available. Will be put in your account."
+						<input type="number" min="0" step="0.01" className="form-control" id="initialSupply" placeholder="Insert the initial supply of tokens available. Will be put in your account."
 							{...register("initialSupply", { required: true, min: 1 })}
-							onKeyPress={(event) => {
-								if (!/[0-9]/.test(event.key)) {
+							data-tip data-for="initalSupplyInput"
+							onMouseEnter={() => showTooltip(true)}
+							onMouseLeave={() => {
+								showTooltip(false);
+								setTimeout(() => showTooltip(true), 50);
+							}}
+							onChange={(event) => {
+								const amount = event.target.value;
+								if (!amount.match(DECIMAL_REGEX)) {
 									event.preventDefault();
 								}
 							}}
@@ -58,6 +68,12 @@ const TokenInfoForm = ({ callback }) => {
 						<input disabled={!isValid} type="submit" name="Next" value="Submit" className="btn btn-primary" />
 					</div>
 				</form>
+				{
+					tooltip &&
+					<ReactTooltip id="initalSupplyInput">
+						<span>Inital Supply must be greater than 0</span>
+					</ReactTooltip>
+				}
 			</div>
 		</LoadingOverlay>
 	)
