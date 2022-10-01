@@ -1,4 +1,4 @@
-const SlippageToleranceModal = ({ show = false, onClose, callback }) => {
+const SlippageToleranceModal = ({ slippageTolerance, show = false, onClose, callback }) => {
 
 	if (!show) {
 		return null
@@ -17,29 +17,29 @@ const SlippageToleranceModal = ({ show = false, onClose, callback }) => {
 						</button>
 					</div>
 					<div className="modal-body">
-						<div className="relative">
+						{/* <div className="relative">
 							<svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="search-icon left-6 h-full text-gray-700">
 								<path fillRule="evenodd" clipRule="evenodd" d="M11.3851 12.4457C8.73488 14.5684 4.85544 14.4013 2.39866 11.9445C-0.237379 9.3085 -0.237379 5.03464 2.39866 2.3986C5.0347 -0.23744 9.30856 -0.23744 11.9446 2.3986C14.4014 4.85538 14.5685 8.73481 12.4458 11.3851L17.6014 16.5407C17.8943 16.8336 17.8943 17.3085 17.6014 17.6014C17.3085 17.8943 16.8337 17.8943 16.5408 17.6014L11.3851 12.4457ZM3.45932 10.8839C1.40907 8.83363 1.40907 5.50951 3.45932 3.45926C5.50957 1.40901 8.83369 1.40901 10.8839 3.45926C12.9327 5.50801 12.9342 8.82875 10.8885 10.8794C10.8869 10.8809 10.8854 10.8823 10.8839 10.8839C10.8824 10.8854 10.8809 10.8869 10.8794 10.8884C8.82882 12.9341 5.50807 12.9326 3.45932 10.8839Z" fill="currentColor"></path>
 							</svg>
 							<input type="search" placeholder=">1:00%" className="w-full search-input border-y border-x-0 border-dashed border-gray-200 py-3.5 pl-14 pr-6 text-sm focus:border-gray-300 focus:ring-0 dark:border-gray-700 dark:bg-light-dark-1 focus:dark:border-gray-600" />
-						</div>
+						</div> */}
 
 						<ul role="listbox" className="min-h-[200px] py-3">
-							<li tabIndex="0" className="flex cursor-pointer items-center gap-2 py-3 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-800 dark:focus:bg-gray-900"
+							<li tabIndex="0" className={`flex cursor-pointer items-center gap-2 py-3 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-800 dark:focus:bg-gray-900 ${slippageTolerance === 0.1 ? "selected-token" : ""}`}
 								onClick={() => {
 									callback(0.1)
 									onClose()
 								}}>
 								<span className="uppercase">0.1%</span>
 							</li>
-							<li tabIndex="1" className="flex cursor-pointer items-center gap-2 py-3 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-800 dark:focus:bg-gray-900"
+							<li tabIndex="1" className={`flex cursor-pointer items-center gap-2 py-3 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-800 dark:focus:bg-gray-900 ${slippageTolerance === 0.5 ? "selected-token" : ""}`}
 								onClick={() => {
 									callback(0.5)
 									onClose()
 								}}>
 								<span className="uppercase">0.5%</span>
 							</li>
-							<li tabIndex="2" className="flex cursor-pointer items-center gap-2 py-3 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-800 dark:focus:bg-gray-900"
+							<li tabIndex="2" className={`flex cursor-pointer items-center gap-2 py-3 px-6 outline-none hover:bg-gray-100 focus:bg-gray-200 dark:hover:bg-gray-800 dark:focus:bg-gray-900 ${slippageTolerance === 1 ? "selected-token" : ""}`}
 								onClick={() => {
 									callback(1)
 									onClose()

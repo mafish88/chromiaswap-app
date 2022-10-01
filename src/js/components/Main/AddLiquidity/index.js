@@ -22,6 +22,7 @@ const AddLiquidity = ({ setKey }) => {
 	const blockchain = useContext(BlockchainContext);
 	const [processing, setProcessing] = useState(false)
 	const [tooltip, showTooltip] = useState(true);
+	const [pairId, setPairId] = useState("")
 
 	const closeModal = () => {
 		setTokenListModalMode('hidden')
@@ -31,6 +32,18 @@ const AddLiquidity = ({ setKey }) => {
 		const tokenBalances = await AssetBalance.getByAccountId(chromia_account?.id, blockchain)
 		// const tokens = tokenBalances.map(assetBalance => ({ name: assetBalance?.asset?.name, balance: assetBalance?.amount }))
 		setTokenList(tokenBalances)
+	}
+
+	const checkPair = async (first, second) => {
+		try {
+			const resp = await blockchain.query("ft3.get_pair", {
+				a1: first,
+				a2: second,
+			})
+			setPairId(JSON.parse(resp)?.lp_id)
+		} catch (err) {
+			setPairId("")
+		}
 	}
 
 	const addLiquidity = async () => {
@@ -56,6 +69,12 @@ const AddLiquidity = ({ setKey }) => {
 		}
 	}, [chromia_account?.id])
 
+	useEffect(() => {
+		if (firstToken && secondToken) {
+			checkPair(firstToken?.id, secondToken?.id)
+		}
+	}, [firstToken?.id.toString("hex"), secondToken?.id.toString("hex")])
+
 	let modalCallback = () => { }
 	if (tokenListModalMode === "TOKEN1") {
 		modalCallback = setFirstToken
@@ -63,8 +82,16 @@ const AddLiquidity = ({ setKey }) => {
 		modalCallback = setSecondToken
 	}
 
-	const isValid = firstToken && secondToken && firstTokenAmount && secondTokenAmount
+	const checkIfValid = () => {
+		if (pairId) {
+			return firstTokenAmount && secondTokenAmount
+		} else {
+			return firstToken && secondToken && firstTokenAmount && secondTokenAmount && Math.sqrt(firstTokenAmount * secondTokenAmount) > 1000
+		}
+	}
 
+	const isValid = checkIfValid()
+	console.log(isValid)
 	return (
 		<LoadingOverlay
 			className="hp-main-layout-content"
@@ -154,16 +181,20 @@ const AddLiquidity = ({ setKey }) => {
 					<div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">0.072631 Btc per ETH</span><span>Share of Pool</span></div> */}
 					</div>
 					<br />
-					<button
-						disabled={!isValid}
+					<div
 						data-tip data-for="addLiquidityBtn"
-						onMouseEnter={() => showTooltip(true)}
+						onMouseEnter={() => {
+							showTooltip(!isValid)
+						}}
 						onMouseLeave={() => {
 							showTooltip(false);
-							setTimeout(() => showTooltip(true), 50);
-						}}
-						className="btn relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm bg-brand border-brand hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none w-full text-white rounded-md sm:rounded-lg px-7 sm:px-9 h-11 sm:h-13 mt-6 xs:mt-8 xs:tracking-widest"
-						style={{ background: '#5bc8d3', fontSize: '20px' }} onClick={() => addLiquidity()}><span className="">Add Liquidity</span></button>
+							setTimeout(() => showTooltip(!isValid), 50);
+						}}>
+						<button
+							disabled={!isValid}
+							className="btn relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm bg-brand border-brand hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none w-full text-white rounded-md sm:rounded-lg px-7 sm:px-9 h-11 sm:h-13 mt-6 xs:mt-8 xs:tracking-widest"
+							style={{ background: '#5bc8d3', fontSize: '20px' }} onClick={() => addLiquidity()}><span className="">Add Liquidity</span></button>
+					</div>
 				</div>
 				<TokenListModal
 					mode={tokenListModalMode}
@@ -175,7 +206,7 @@ const AddLiquidity = ({ setKey }) => {
 				{
 					tooltip &&
 					<ReactTooltip id="addLiquidityBtn">
-						<span>Inital Liquidity (Square root(AmountA * AmountB)) must be greater than 1000000</span>
+						<span>Inital Liquidity not enough</span>
 					</ReactTooltip>
 				}
 			</CommonTokenSelector >

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import logo from '../../../img/logo.png'
 import favIcon from '../../../img/favicon.png'
 import { AppContext } from '../../context/AppContext';
@@ -6,7 +6,16 @@ import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE
 
 const SideBar = () => {
 
-	const { page, changePage } = useContext(AppContext)
+	const { page, changePage, collapsed_sidebar, toggleSidebar } = useContext(AppContext)
+
+	useEffect(() => {
+		if (collapsed_sidebar) {
+			document.body.classList.add('collapsed-active');
+		} else {
+			document.body.classList.remove('collapsed-active');
+
+		}
+	}, [collapsed_sidebar]);
 
 	return (
 		<div className='hp-sidebar hp-bg-color-black-0 hp-bg-color-dark-100'>
@@ -14,7 +23,10 @@ const SideBar = () => {
 				<div className="hp-sidebar-header-menu">
 					<div className="row justify-content-between align-items-end me-12 ms-24 mt-24">
 						<div className="w-auto px-0 hp-sidebar-collapse-button hp-sidebar-visible">
-							<button type="button" className="btn btn-text btn-icon-only">
+							<button type="button" className="btn btn-text btn-icon-only"
+								onClick={() =>
+									toggleSidebar(!collapsed_sidebar)
+								}>
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
 									<path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path>
 								</svg>
@@ -32,7 +44,10 @@ const SideBar = () => {
 							</div>
 						</div>
 						<div className="w-auto px-0 hp-sidebar-collapse-button hp-sidebar-hidden">
-							<button type="button" className="btn btn-text btn-icon-only">
+							<button type="button" className="btn btn-text btn-icon-only"
+								onClick={() =>
+									toggleSidebar(!collapsed_sidebar)
+								}>
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16">
 									<path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path>
 								</svg>
