@@ -20,7 +20,6 @@ const SwapToken = () => {
 	const [secondTokenAmount, setSecondTokenAmount] = useState("")
 	const [tokenListModalMode, setTokenListModalMode] = useState("hidden")
 	const [tokenList, setTokenList] = useState([])
-	const [disabledField, setDisabledField] = useState("")
 	const { chromia_account, changePage } = useContext(AppContext)
 	const blockchain = useContext(BlockchainContext);
 	const [slippageTolerance, setSlippageTolerance] = useState(0.1)
@@ -93,13 +92,12 @@ const SwapToken = () => {
 					second: second,
 					amount: amount
 				})
-				setter(priceTuple?.quote)
-				setRate(priceTuple?.current_price)
+				setter(parseFloat(priceTuple?.quote).toFixed(18))
+				setRate(parseFloat(priceTuple?.current_price).toFixed(18))
 			} catch (err) {
 				console.log(err)
 				toast(err.shortReason)
 			}
-			setDisabledField("")
 		}
 	}
 
@@ -109,7 +107,8 @@ const SwapToken = () => {
 				a1: first,
 				a2: second,
 			})
-			setPairId(JSON.parse(resp)?.lp_id)
+			JSON.parse(resp)
+			setPairId(firstToken?.id.toString("hex") + "_" + secondToken?.id.toString("hex"))
 		} catch (err) {
 			setPairId("")
 			setRate("")
@@ -130,22 +129,20 @@ const SwapToken = () => {
 
 	useEffect(() => {
 		if (pairId) {
-			if ((disabledField === TOKENAMOUNT1 && secondTokenAmount) || !firstTokenAmount) {
-				fetchPrice(secondToken?.id, firstToken?.id, secondTokenAmount, setFirstTokenAmount)
-			} else if ((disabledField === TOKENAMOUNT2 && firstTokenAmount) || !secondTokenAmount) {
+			if (firstTokenAmount) {
 				fetchPrice(firstToken?.id, secondToken?.id, firstTokenAmount, setSecondTokenAmount)
 			}
 		}
-	}, [disabledField, pairId])
+	}, [pairId, firstTokenAmount])
 
 	let modalCallback = () => { }
 	if (tokenListModalMode === "TOKEN1") {
-		modalCallback = (val) => { setFirstToken(val); setFirstTokenAmount("") }
+		modalCallback = (val) => { setFirstToken(val); setFirstTokenAmount(""); setSecondTokenAmount("") }
 	} else if (tokenListModalMode === "TOKEN2") {
 		modalCallback = (val) => { setSecondToken(val); setSecondTokenAmount("") }
 	}
 
-	const isValid = firstToken && secondToken && firstTokenAmount && secondTokenAmount && pairId
+	const isValid = firstToken && secondToken && parseFloat(firstTokenAmount) && parseFloat(secondTokenAmount) && pairId
 
 	return (
 		<LoadingOverlay
@@ -167,16 +164,14 @@ const SwapToken = () => {
 									</button>
 								</div>
 								<div className="flex flex-1 flex-col text-right">
-									<input disabled={!firstToken || disabledField === TOKENAMOUNT1} type="text" placeholder="0.0" inputMode="decimal"
+									<input disabled={!firstToken} type="text" placeholder="0.0" inputMode="decimal"
 										className="w-full rounded-tr-lg rounded-br-lg border-0 exchange-value pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
 										value={firstTokenAmount}
 										onChange={(e) => {
 											const amount = e.target.value;
 											if (amount === '') {
-												setDisabledField(TOKENAMOUNT2)
 												setFirstTokenAmount('')
 											} else if (amount.match(DECIMAL_REGEX)) {
-												setDisabledField(TOKENAMOUNT2)
 												setFirstTokenAmount(e.target.value);
 											}
 										}} />
@@ -188,19 +183,11 @@ const SwapToken = () => {
 									onClick={() => {
 										const tempName = firstToken
 										const tempAmount = firstTokenAmount
-										let futureDisabledField = ""
-										if (disabledField === TOKENAMOUNT1) {
-											futureDisabledField = TOKENAMOUNT2
-										} else if (disabledField === TOKENAMOUNT2) {
-											futureDisabledField = TOKENAMOUNT1
-										}
-										setDisabledField("")
 										setFirstToken(secondToken)
 										setFirstTokenAmount(secondTokenAmount)
 										setSecondToken(tempName)
 										setSecondTokenAmount(tempAmount)
 										setRate(1 / rate)
-										setDisabledField(futureDisabledField)
 									}}
 									className="relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800  text-gray-900 dark:text-white rounded-full w-8 h-8" style={{ border: 'none' }}>
 									<span className="">
@@ -222,16 +209,14 @@ const SwapToken = () => {
 									</button>
 								</div>
 								<div className="flex flex-1 flex-col text-right">
-									<input disabled={!secondToken || disabledField === TOKENAMOUNT2} type="text" placeholder="0.0" inputMode="decimal"
+									<input disabled={true} type="text" placeholder="0.0" inputMode="decimal"
 										className="w-full rounded-tr-lg rounded-br-lg border-0 exchange-value pb-0.5 text-right text-lg outline-none focus:ring-0 dark:bg-light-dark"
 										value={secondTokenAmount}
 										onChange={(e) => {
 											const amount = e.target.value;
 											if (amount === '') {
-												setDisabledField(TOKENAMOUNT2)
 												setSecondTokenAmount('')
 											} else if (amount.match(DECIMAL_REGEX)) {
-												setDisabledField(TOKENAMOUNT2)
 												setSecondTokenAmount(e.target.value);
 											}
 										}} />

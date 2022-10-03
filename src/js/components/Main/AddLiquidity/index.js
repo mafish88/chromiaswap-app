@@ -84,9 +84,9 @@ const AddLiquidity = ({ setKey }) => {
 
 	const checkIfValid = () => {
 		if (pairId) {
-			return firstTokenAmount && secondTokenAmount
+			return firstTokenAmount && secondTokenAmount && parseFloat(firstTokenAmount) && parseFloat(secondTokenAmount)
 		} else {
-			return firstToken && secondToken && firstTokenAmount && secondTokenAmount && Math.sqrt(firstTokenAmount * secondTokenAmount) > 1000
+			return firstToken && secondToken && parseFloat(firstTokenAmount) && parseFloat(secondTokenAmount) && Math.sqrt(firstTokenAmount * secondTokenAmount) > 1000
 		}
 	}
 
