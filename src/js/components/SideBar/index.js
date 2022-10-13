@@ -93,6 +93,11 @@ const SideBar = () => {
 										</span>
 									</a>
 								</li>
+								<li>
+									<a href="https://www.quiz.chromiaswap.exchange/" target="_blank" rel="noopener noreferrer">
+										<span>Chromia Quiz</span>
+									</a>
+								</li>
 							</ul>
 						</li>
 					</ul>
