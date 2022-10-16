@@ -50,10 +50,10 @@ const AddLiquidity = ({ setKey }) => {
 		setProcessing(true)
 		try {
 			const storedAccount = getStoredAccount()
-			console.log(await blockchain.transactionBuilder()
+			await blockchain.transactionBuilder()
 				.add(op("ft3.add_liq", firstToken.id, secondToken.id, firstTokenAmount, secondTokenAmount, storedAccount.user.authDescriptor.id, chromia_account.id))
 				.add(nop())
-				.buildAndSign(storedAccount.user).post())
+				.buildAndSign(storedAccount.user).post()
 			changePage(TOKEN_LIST_PAGE)
 		} catch (err) {
 			console.log(JSON.stringify(err))
@@ -91,7 +91,6 @@ const AddLiquidity = ({ setKey }) => {
 	}
 
 	const isValid = checkIfValid()
-	console.log(isValid)
 	return (
 		<LoadingOverlay
 			className="hp-main-layout-content"

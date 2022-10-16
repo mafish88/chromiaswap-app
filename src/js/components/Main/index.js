@@ -20,6 +20,7 @@ const Main = () => {
 	const blockchain = useContext(BlockchainContext);
 	const { search } = useLocation()
 	const [tx, setTx] = useState(search && parse(search).rawTx);
+	const [key, setKey] = useState(Date.now())
 	const navigate = useNavigate();
 	const verifyAndSendTx = async () => {
 		if (!tx) {
@@ -27,10 +28,8 @@ const Main = () => {
 		}
 		try {
 			const sso = new SSO(blockchain);
-			console.log("before finalize")
 			const [account, user] = await sso.finalizeLogin(tx)
 			setStoredAccount({ user, account })
-			console.log("after finalize")
 			localStorage.setItem("chromia_account", account.id.toString("hex"))
 			setAccount(account);
 			navigate("/", { replace: true })
@@ -63,7 +62,7 @@ const Main = () => {
 			mainContent = <CreateToken />
 			break;
 		case SWAP_TOKEN_PAGE:
-			mainContent = <SwapToken />
+			mainContent = <SwapToken key={key} setKey={setKey} />
 			break;
 		case ADD_LIQUIDITY_PAGE:
 			mainContent = <AddLiquidity />

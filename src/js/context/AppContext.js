@@ -43,7 +43,6 @@ export const AppContextProvider = ({ children }) => {
 			dispatch({ type: actions.SET_ACCOUNT, chromia_account });
 		},
 		toggleSidebar: (collapsed_sidebar) => {
-			console.log(collapsed_sidebar)
 			dispatch({ type: actions.TOGGLE_SIDEBAR, collapsed_sidebar });
 		}
 	};

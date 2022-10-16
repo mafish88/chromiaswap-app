@@ -9,17 +9,18 @@ import { getStoredAccount } from "../../../../lib/account-storage";
 import { toast } from 'react-toastify';
 import LoadingOverlay from "react-loading-overlay";
 import { PuffLoader } from "react-spinners";
+import { getTokenListForSwap } from "../../../utils/helper";
 
 const TOKENAMOUNT1 = "TOKENAMOUNT1";
 const TOKENAMOUNT2 = "TOKENAMOUNT2";
 
-const SwapToken = () => {
+const SwapToken = ({setKey}) => {
 	const [firstToken, setFirstToken] = useState(null)
 	const [firstTokenAmount, setFirstTokenAmount] = useState("")
 	const [secondToken, setSecondToken] = useState(null)
 	const [secondTokenAmount, setSecondTokenAmount] = useState("")
 	const [tokenListModalMode, setTokenListModalMode] = useState("hidden")
-	const [tokenList, setTokenList] = useState([])
+	const [tokenList, setTokenList] = useState({})
 	const { chromia_account, changePage } = useContext(AppContext)
 	const blockchain = useContext(BlockchainContext);
 	const [slippageTolerance, setSlippageTolerance] = useState(0.1)
@@ -33,7 +34,8 @@ const SwapToken = () => {
 
 	const loadTokenList = async () => {
 		const tokenBalances = await AssetBalance.getByAccountId(chromia_account?.id, blockchain)
-		setTokenList(tokenBalances)
+		const pairList = await blockchain.query("ft3.get_pairs", {})
+		setTokenList(getTokenListForSwap(tokenBalances, pairList))
 	}
 
 	const createOrGetTokenId = async (tokenName) => {
@@ -57,21 +59,24 @@ const SwapToken = () => {
 		const newToken2 = await createOrGetTokenId("Token2")
 		await AssetBalance.giveBalance(chromia_account.id, newToken2, 200200, blockchain)
 
-		console.log(await blockchain.transactionBuilder()
+		await blockchain.transactionBuilder()
 			.add(op("ft3.add_liq", newToken1, newToken2, 100000, 200000, storedAccount.user.authDescriptor.id, chromia_account.id))
 			.add(nop())
-			.buildAndSign(storedAccount.user).post())
+			.buildAndSign(storedAccount.user).post()
 	}
 
+	const reset = () => {
+		setKey(Date.now())
+	}
 	const swapToken = async () => {
 		setProcessing(true)
 		try {
 			const storedAccount = getStoredAccount()
 			const amountOutMin = getMinReceived(secondTokenAmount, slippageTolerance)
-			console.log(await blockchain.transactionBuilder()
+			await blockchain.transactionBuilder()
 				.add(op("ft3.swap", firstToken?.id, secondToken?.id, firstTokenAmount, amountOutMin.toString(), Date.now() + 10000, storedAccount.user.authDescriptor.id, chromia_account.id))
 				.add(nop())
-				.buildAndSign(storedAccount.user).post())
+				.buildAndSign(storedAccount.user).post()
 			changePage(TOKEN_LIST_PAGE)
 		} catch (err) {
 			console.log(JSON.stringify(err))
@@ -136,10 +141,13 @@ const SwapToken = () => {
 	}, [pairId, firstTokenAmount])
 
 	let modalCallback = () => { }
+	let modalTokenList = []
 	if (tokenListModalMode === "TOKEN1") {
 		modalCallback = (val) => { setFirstToken(val); setFirstTokenAmount(""); setSecondTokenAmount("") }
+		modalTokenList = secondToken ? tokenList[secondToken?.id?.toString('hex')] : tokenList['default'];
 	} else if (tokenListModalMode === "TOKEN2") {
 		modalCallback = (val) => { setSecondToken(val); setSecondTokenAmount("") }
+		modalTokenList = firstToken ? tokenList[firstToken?.id?.toString('hex')] : tokenList['default'];
 	}
 
 	const isValid = firstToken && secondToken && parseFloat(firstTokenAmount) && parseFloat(secondTokenAmount) && pairId
@@ -237,12 +245,15 @@ const SwapToken = () => {
 						disabled={!isValid}
 						onClick={swapToken}
 						className="btn relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm bg-brand border-brand hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none w-full text-white rounded-md sm:rounded-lg px-7 sm:px-9 h-11 sm:h-13 mt-6 xs:mt-8 xs:tracking-widest" style={{ background: '#5bc8d3', fontSize: '20px' }}><span className="">Swap</span></button>
+					<button
+						onClick={reset}
+						className="btn relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm bg-brand border-brand hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none w-full text-white rounded-md sm:rounded-lg px-7 sm:px-9 h-11 sm:h-13 mt-6 xs:mt-8 xs:tracking-widest" style={{ background: '#ff0022', fontSize: '20px' }}><span className="">Reset</span></button>
 				</div>
 				<TokenListModal
 					mode={tokenListModalMode}
 					onClose={closeModal}
 					callback={modalCallback}
-					tokenList={tokenList}
+					tokenList={modalTokenList}
 					firstToken={firstToken}
 					secondToken={secondToken} />
 			</CommonTokenSelector>

@@ -22,7 +22,6 @@ const TokenInfoForm = ({ callback }) => {
 		}
 	}
 
-	// console.log(errors)
 	return (
 		<LoadingOverlay
 			active={processing}

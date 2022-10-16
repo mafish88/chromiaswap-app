@@ -29,7 +29,6 @@ const CreateToken = () => {
 	const createTokenCallback = async (data) => {
 		try {
 			const tokenId = await createOrGetTokenId(data?.tokenName)
-			console.log("Got token: ", tokenId)
 			await AssetBalance.giveBalance(chromia_account.id, tokenId, data?.initialSupply, blockchain)
 			return true
 		} catch (err) {
