@@ -65,7 +65,7 @@ const Main = () => {
 			mainContent = <SwapToken key={key} setKey={setKey} />
 			break;
 		case ADD_LIQUIDITY_PAGE:
-			mainContent = <AddLiquidity />
+			mainContent = <AddLiquidity key={key} setKey={setKey} />
 			break;
 		case TOKEN_LIST_PAGE:
 			mainContent = <TokenListPage />

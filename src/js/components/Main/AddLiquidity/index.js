@@ -34,6 +34,10 @@ const AddLiquidity = ({ setKey }) => {
 		setTokenList(tokenBalances)
 	}
 
+	const reset = () => {
+		setKey(Date.now())
+	}
+
 	const checkPair = async (first, second) => {
 		try {
 			const resp = await blockchain.query("ft3.get_pair", {
@@ -54,6 +58,8 @@ const AddLiquidity = ({ setKey }) => {
 				.add(op("ft3.add_liq", firstToken.id, secondToken.id, firstTokenAmount, secondTokenAmount, storedAccount.user.authDescriptor.id, chromia_account.id))
 				.add(nop())
 				.buildAndSign(storedAccount.user).post()
+
+			toast(`Liquidity added for pair ${firstToken?.name}, ${secondToken?.name}`)
 			changePage(TOKEN_LIST_PAGE)
 		} catch (err) {
 			console.log(JSON.stringify(err))
@@ -91,12 +97,13 @@ const AddLiquidity = ({ setKey }) => {
 	}
 
 	const isValid = checkIfValid()
+	const showReset = firstToken || secondToken
 	return (
 		<LoadingOverlay
 			className="hp-main-layout-content"
 			active={processing}
 			spinner={<PuffLoader color={"#5bc8d3"} />}>
-			<CommonTokenSelector >
+			<CommonTokenSelector showReset={showReset} onReset={reset}>
 				<div data-projection-id="12" style={{ opacity: 1, transform: 'none' }}>
 					<div className="mb-5 border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
 						<div className="relative flex gap-3 flex-col mt-16">

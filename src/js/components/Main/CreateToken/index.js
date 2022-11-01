@@ -30,6 +30,7 @@ const CreateToken = () => {
 		try {
 			const tokenId = await createOrGetTokenId(data?.tokenName)
 			await AssetBalance.giveBalance(chromia_account.id, tokenId, data?.initialSupply, blockchain)
+			toast(`Created Token ${data?.tokenName} successfully`)
 			return true
 		} catch (err) {
 			console.log(JSON.stringify(err))

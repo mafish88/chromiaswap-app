@@ -14,7 +14,7 @@ import { getTokenListForSwap } from "../../../utils/helper";
 const TOKENAMOUNT1 = "TOKENAMOUNT1";
 const TOKENAMOUNT2 = "TOKENAMOUNT2";
 
-const SwapToken = ({setKey}) => {
+const SwapToken = ({ setKey }) => {
 	const [firstToken, setFirstToken] = useState(null)
 	const [firstTokenAmount, setFirstTokenAmount] = useState("")
 	const [secondToken, setSecondToken] = useState(null)
@@ -77,6 +77,7 @@ const SwapToken = ({setKey}) => {
 				.add(op("ft3.swap", firstToken?.id, secondToken?.id, firstTokenAmount, amountOutMin.toString(), Date.now() + 10000, storedAccount.user.authDescriptor.id, chromia_account.id))
 				.add(nop())
 				.buildAndSign(storedAccount.user).post()
+			toast(`Swapped succesfully`)
 			changePage(TOKEN_LIST_PAGE)
 		} catch (err) {
 			console.log(JSON.stringify(err))
@@ -151,13 +152,13 @@ const SwapToken = ({setKey}) => {
 	}
 
 	const isValid = firstToken && secondToken && parseFloat(firstTokenAmount) && parseFloat(secondTokenAmount) && pairId
-
+	const showReset = firstToken || secondToken
 	return (
 		<LoadingOverlay
 			className="hp-main-layout-content"
 			active={processing}
 			spinner={<PuffLoader color={"#5bc8d3"} />}>
-			<CommonTokenSelector slippageTolerance={slippageTolerance} setSlippageTolerance={setSlippageTolerance}>
+			<CommonTokenSelector slippageTolerance={slippageTolerance} setSlippageTolerance={setSlippageTolerance} showReset={showReset} onReset={reset}>
 				<div data-projection-id="12" style={{ opacity: 1, transform: 'none' }}>
 					<div className="mb-5 border-gray-200 pb-5 dark:border-gray-800 xs:mb-7 xs:pb-6">
 						<div className="relative flex gap-3 flex-col mt-16">
@@ -245,9 +246,6 @@ const SwapToken = ({setKey}) => {
 						disabled={!isValid}
 						onClick={swapToken}
 						className="btn relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm bg-brand border-brand hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none w-full text-white rounded-md sm:rounded-lg px-7 sm:px-9 h-11 sm:h-13 mt-6 xs:mt-8 xs:tracking-widest" style={{ background: '#5bc8d3', fontSize: '20px' }}><span className="">Swap</span></button>
-					<button
-						onClick={reset}
-						className="btn relative inline-flex shrink-0 items-center justify-center overflow-hidden text-center text-xs font-medium outline-none transition-all sm:text-sm bg-brand border-brand hover:-translate-y-0.5 hover:shadow-large focus:-translate-y-0.5 focus:shadow-large focus:outline-none w-full text-white rounded-md sm:rounded-lg px-7 sm:px-9 h-11 sm:h-13 mt-6 xs:mt-8 xs:tracking-widest" style={{ background: '#ff0022', fontSize: '20px' }}><span className="">Reset</span></button>
 				</div>
 				<TokenListModal
 					mode={tokenListModalMode}
