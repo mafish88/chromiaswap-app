@@ -2,7 +2,7 @@ import { createContext, useReducer } from "react";
 import { TOKEN_LIST_PAGE } from "../utils/constants";
 
 const initialState = {
-	page: TOKEN_LIST_PAGE,
+	page: null,
 	chromia_account: null,
 	collapsed_sidebar: false
 };

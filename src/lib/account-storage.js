@@ -29,4 +29,5 @@ export const setStoredAccount = ({ user, account }) => {
 
 export const deleteStoredAccount = () => {
   localStorage.removeItem('ft3_account');
+  localStorage.removeItem('chromia_account');
 }

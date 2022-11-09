@@ -19,6 +19,12 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import LoadingOverlay from "react-loading-overlay";
+import AddLiquidity from './js/components/AddLiquidity';
+import CreateToken from './js/components/CreateToken';
+import SwapToken from './js/components/SwapToken';
+import TokenListPage from './js/components/TokenListPage';
+import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE } from './js/utils/constants';
+
 
 LoadingOverlay.propTypes = undefined
 
@@ -31,13 +37,11 @@ function App() {
           <AppContextProvider>
             <BrowserRouter>
               <Routes>
-                <Route path="/" exact
-                  element={
-                    <>
-                      <SideBar />
-                      <Main />
-                    </>
-                  } />
+                <Route path="/" exact element={<> <SideBar /> <TokenListPage /> </>} />
+                <Route path={ADD_LIQUIDITY_PAGE} element={<> <SideBar /> <AddLiquidity /> </>} />
+                <Route path={CREATE_TOKEN_PAGE} element={<> <SideBar /> <CreateToken /> </>} />
+                <Route path={SWAP_TOKEN_PAGE} element={<> <SideBar /> <SwapToken /> </>} />
+                <Route path={TOKEN_LIST_PAGE} element={<> <SideBar /> <TokenListPage /> </>} />
               </Routes>
             </BrowserRouter>
           </AppContextProvider>
