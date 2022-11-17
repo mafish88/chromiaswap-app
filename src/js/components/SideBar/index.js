@@ -6,7 +6,7 @@ import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE
 
 const SideBar = () => {
 
-	const { page, changePage, collapsed_sidebar, toggleSidebar } = useContext(AppContext)
+	const { page, changePage, collapsed_sidebar, toggleSidebar, is_page_loaded } = useContext(AppContext)
 
 	useEffect(() => {
 		if (collapsed_sidebar) {
@@ -17,6 +17,9 @@ const SideBar = () => {
 		}
 	}, [collapsed_sidebar]);
 
+	if (!is_page_loaded) {
+		return (<></>)
+	}
 	return (
 		<div className='hp-sidebar hp-bg-color-black-0 hp-bg-color-dark-100'>
 			<div className="hp-sidebar-container">

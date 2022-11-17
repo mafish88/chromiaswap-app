@@ -25,7 +25,7 @@ const ConnectWallet = () => {
 	const logout = async () => {
 		await new SSO(blockchain).logout();
 		deleteStoredAccount()
-		navigate(pathname)
+		navigate(0)
 	}
 	const getMinifiedAddress = (address) => {
 		return [address.slice(0, 7), "...", address.slice(address.length - 7)].join('')

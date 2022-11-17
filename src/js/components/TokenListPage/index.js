@@ -42,10 +42,11 @@ const TokenListPage = () => {
 					{/* <span className="icon-btc"><span className="path1"></span><span className="path2"></span></span> */}
 					<span>{token?.asset?.name}</span>
 				</td>
-				<td className="bold"><div style={{wordBreak: 'break-word'}}>{token?.amount}</div></td>
+				<td className="bold"><div style={{ wordBreak: 'break-word' }}>{token?.amount}</div></td>
 			</tr>
 		)
 	})
+
 
 	return (
 		<Wrapper>
@@ -76,6 +77,7 @@ const TokenListPage = () => {
 																		{tableRows(tokenList)}
 																	</tbody>
 																</table>
+																{tokenList.length === 0 && <div style={{ textAlign: 'center' }}>No Tokens Found</div>}
 															</div>
 														</div>
 													</div>
@@ -114,6 +116,7 @@ const TokenListPage = () => {
 																		{tableRows(lpTokens)}
 																	</tbody>
 																</table>
+																{lpTokens.length === 0 && <div style={{ textAlign: 'center' }}>No Liquidity Tokens Found</div>}
 															</div>
 														</div>
 													</div>
