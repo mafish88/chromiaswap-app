@@ -62,6 +62,7 @@ const AddLiquidityComponent = ({ setKey }) => {
 
 			toast(`Liquidity added for pair ${firstToken?.name}, ${secondToken?.name}`)
 			changePage(TOKEN_LIST_PAGE)
+			setKey(Date.now())
 		} catch (err) {
 			console.log(JSON.stringify(err))
 			toast(err.shortReason)

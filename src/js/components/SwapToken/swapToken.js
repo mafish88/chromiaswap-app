@@ -80,6 +80,7 @@ const SwapTokenComponent = ({ setKey }) => {
 				.buildAndSign(storedAccount.user).post())
 			toast(`Swapped succesfully`)
 			changePage(TOKEN_LIST_PAGE)
+			setKey(Date.now())
 		} catch (err) {
 			console.log(JSON.stringify(err))
 			toast(err.shortReason)
