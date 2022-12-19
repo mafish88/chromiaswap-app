@@ -2,7 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import logo from '../../../img/logo.png'
 import favIcon from '../../../img/favicon.png'
 import { AppContext } from '../../context/AppContext';
-import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE } from '../../utils/constants';
+import { ADD_LIQUIDITY_PAGE, CREATE_TOKEN_PAGE, SWAP_TOKEN_PAGE, TOKEN_LIST_PAGE, TX_HISTORY_PAGE } from '../../utils/constants';
+import HistoryIcon from '@mui/icons-material/History';
 
 const SideBar = () => {
 
@@ -93,6 +94,14 @@ const SideBar = () => {
 												<path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"></path>
 											</svg>
 											<span>Token List</span>
+										</span>
+									</a>
+								</li>
+								<li>
+									<a href="/transactions" className={page === TX_HISTORY_PAGE ? "active" : ""}>
+										<span>
+											<HistoryIcon style={{marginRight: '10px'}} />
+											<span>History</span>
 										</span>
 									</a>
 								</li>

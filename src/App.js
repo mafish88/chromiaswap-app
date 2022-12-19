@@ -13,7 +13,6 @@ import './css/pages/swap.css'
 import { AppContext, AppContextProvider } from './js/context/AppContext';
 import { BlockchainProvider } from './lib/blockchain/blockchain-context';
 import { SSO } from 'ft3-lib';
-import Main from './js/components/Main';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import LoadingOverlay from "react-loading-overlay";
