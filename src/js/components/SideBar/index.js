@@ -7,7 +7,7 @@ import HistoryIcon from '@mui/icons-material/History';
 
 const SideBar = () => {
 
-	const { page, changePage, collapsed_sidebar, toggleSidebar, is_page_loaded } = useContext(AppContext)
+	const { page, collapsed_sidebar, toggleSidebar, is_page_loaded } = useContext(AppContext)
 
 	useEffect(() => {
 		if (collapsed_sidebar) {
@@ -38,13 +38,13 @@ const SideBar = () => {
 						</div>
 						<div className="w-auto px-0">
 							<div className="hp-header-logo d-flex align-items-end">
-								<a href="#">
+								<button type="button">
 									<img className="hp-logo hp-sidebar-visible" src={favIcon} alt="logo" />
 									<img className="hp-logo hp-sidebar-hidden hp-dir-none hp-dark-none" src={logo} alt="logo" />
 									<img className="hp-logo hp-sidebar-hidden hp-dir-none hp-dark-block" src={logo} alt="logo" />
 									<img className="hp-logo hp-sidebar-hidden hp-dir-block hp-dark-none" src={logo} alt="logo" />
 									<img className="hp-logo hp-sidebar-hidden hp-dir-block hp-dark-block" src={logo} alt="logo" />
-								</a>
+								</button>
 							</div>
 						</div>
 						<div className="w-auto px-0 hp-sidebar-collapse-button hp-sidebar-hidden">

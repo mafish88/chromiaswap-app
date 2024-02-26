@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { AppContext } from "../../context/AppContext"
 import CommonTokenSelector from "../CommonTokenSelector"
 import TokenListModal from "../TokenListModal"
-import { AssetBalance, nop, op, SingleSignatureAuthDescriptor } from "ft3-lib";
+import { AssetBalance, nop, op } from "ft3-lib";
 import BlockchainContext from "../../../lib/blockchain/blockchain-context";
 import { getStoredAccount } from "../../../lib/account-storage";
 import { DECIMAL_REGEX, TOKEN_LIST_PAGE } from "../../utils/constants";
@@ -11,6 +11,7 @@ import { PuffLoader } from "react-spinners";
 import { toast } from 'react-toastify';
 import ReactTooltip from "react-tooltip";
 import Wrapper from "../Wrapper";
+import { useCallback } from "react";
 
 const AddLiquidityComponent = ({ setKey }) => {
 	const [firstToken, setFirstToken] = useState(null)
@@ -29,27 +30,32 @@ const AddLiquidityComponent = ({ setKey }) => {
 		setTokenListModalMode('hidden')
 	}
 
-	const loadTokenList = async () => {
-		const tokenBalances = await AssetBalance.getByAccountId(chromia_account?.id, blockchain)
-		// const tokens = tokenBalances.map(assetBalance => ({ name: assetBalance?.asset?.name, balance: assetBalance?.amount }))
-		setTokenList(tokenBalances)
-	}
+	useEffect(() => {
+		const loadTokenList = async () => {
+			const tokenBalances = await AssetBalance.getByAccountId(chromia_account?.id, blockchain)
+			setTokenList(tokenBalances)
+		}
+
+		if (chromia_account) {
+			loadTokenList()
+		}
+	}, [chromia_account, blockchain])
 
 	const reset = () => {
 		setKey(Date.now())
 	}
 
-	const checkPair = async (first, second) => {
+	const checkPair = useCallback(async (first, second) => {
 		try {
 			const resp = await blockchain.query("ft3.get_pair", {
 				a1: first,
 				a2: second,
-			})
-			setPairId(JSON.parse(resp)?.lp_id)
+			});
+			setPairId(JSON.parse(resp)?.lp_id);
 		} catch (err) {
-			setPairId("")
+			setPairId("");
 		}
-	}
+	}, [blockchain, setPairId]);
 
 	const addLiquidity = async () => {
 		setProcessing(true)
@@ -72,22 +78,30 @@ const AddLiquidityComponent = ({ setKey }) => {
 	}
 
 	useEffect(() => {
+		const loadTokenList = async () => {
+			const tokenBalances = await AssetBalance.getByAccountId(chromia_account?.id, blockchain);
+			setTokenList(tokenBalances);
+		};
+
 		if (chromia_account) {
-			loadTokenList()
+			loadTokenList();
 		}
-	}, [chromia_account?.id])
+	}, [chromia_account, blockchain, setTokenList]);
+
+	const firstTokenId = firstToken?.id.toString("hex");
+	const secondTokenId = secondToken?.id.toString("hex");
 
 	useEffect(() => {
 		if (firstToken && secondToken) {
-			checkPair(firstToken?.id, secondToken?.id)
+			checkPair(firstTokenId, secondTokenId);
 		}
-	}, [firstToken?.id.toString("hex"), secondToken?.id.toString("hex")])
+	}, [checkPair, firstToken, secondToken, firstTokenId, secondTokenId]);
 
-	let modalCallback = () => { }
+	let modalCallback = () => {};
 	if (tokenListModalMode === "TOKEN1") {
-		modalCallback = setFirstToken
+		modalCallback = setFirstToken;
 	} else if (tokenListModalMode === "TOKEN2") {
-		modalCallback = setSecondToken
+		modalCallback = setSecondToken;
 	}
 
 	const checkIfValid = () => {
