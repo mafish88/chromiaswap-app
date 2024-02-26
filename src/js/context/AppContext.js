@@ -1,5 +1,5 @@
 import { createContext, useReducer } from "react";
-import { TOKEN_LIST_PAGE } from "../utils/constants";
+import {TOKEN_LIST_PAGE} from "../utils/constants";
 
 const initialState = {
 	page: null,

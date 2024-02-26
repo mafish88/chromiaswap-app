@@ -1,5 +1,8 @@
 export const getTokenListForSwap = (assetBalances, pairs) => {
-	const balanceObj = assetBalances.reduce((acc, curr) => (acc[curr?.asset?.id.toString('hex')] = curr, acc), {});
+	const balanceObj = assetBalances.reduce((acc, curr) => {
+		acc[curr?.asset?.id.toString('hex')] = curr;
+		return acc;
+	}, {});
 
 	let tokenListObj = {
 		default: []
