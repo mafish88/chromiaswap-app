@@ -2,12 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import BlockchainContext from "../../../lib/blockchain/blockchain-context";
 import { AppContext } from "../../context/AppContext";
 import { gtx } from 'postchain-client'
-import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Link } from "@mui/material";
+import { Box, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Link } from "@mui/material";
 import Wrapper from "../Wrapper";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import CachedIcon from '@mui/icons-material/Cached';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import { useCallback } from "react";
 
 const darkTheme = createTheme({
 	palette: {
@@ -32,7 +33,7 @@ const TransactionHistory = () => {
 	const blockchain = useContext(BlockchainContext);
 	const [txHistory, setTxHistory] = useState([]);
 
-	const loadTransactionHistory = async () => {
+	const loadTransactionHistory = useCallback(async () => {
 		const deHex = s => Buffer.from(s).toString('hex')
 		const dex_history = await blockchain.query("ft3.get_dex_history", { acc_id: chromia_account?.id })
 		console.log("history", gtx.deserialize(Buffer.from(dex_history[0].tx_data, 'hex')))
@@ -41,13 +42,14 @@ const TransactionHistory = () => {
 		const tx = gtx.deserialize(Buffer.from(dex_history[0].tx_data, 'hex'))
 		console.log(tx.signers.map(deHex))
 		setTxHistory(dex_history.reverse())
-	}
+	}, [blockchain, chromia_account?.id]) // Add an empty array as the second argument to useCallback
+
 
 	useEffect(() => {
 		if (chromia_account) {
 			loadTransactionHistory()
 		}
-	}, [chromia_account?.id])
+	}, [chromia_account, chromia_account.id, loadTransactionHistory])
 
 
 
