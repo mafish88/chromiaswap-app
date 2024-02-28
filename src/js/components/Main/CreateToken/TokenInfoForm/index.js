@@ -50,12 +50,12 @@ const TokenInfoForm = ({ callback }) => {
 								showTooltip(false);
 								setTimeout(() => showTooltip(true), 50);
 							}}
-							// onChange={(event) => {
-							// 	const amount = event.target.value;
-							// 	if (!amount.match(DECIMAL_REGEX)) {
-							// 		event.preventDefault();
-							// 	}
-							// }}
+							 onChange={(event) => {
+							 	const amount = event.target.value;
+							 	if (!amount.match(DECIMAL_REGEX)) {
+							 		event.preventDefault();
+							 	}
+							 }}
 						/>
 
 					</div>
