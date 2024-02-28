@@ -20,6 +20,7 @@ const Wrapper = ({ children }) => {
 	const { page, chromia_account, setAccount, changePage, pageLoaded, is_page_loaded } = useContext(AppContext)
 	const blockchain = useContext(BlockchainContext);
 	const { pathname, search } = useLocation()
+	// eslint-disable-next-line no-unused-vars
 	const [tx, setTx] = useState(search && parse(search).rawTx);
 	const navigate = useNavigate();
 	const verifyAndSendTx = async () => {
@@ -77,18 +78,19 @@ const Wrapper = ({ children }) => {
 		 	case CREATE_TOKEN_PAGE:
 				mainContent = <CreateToken />
 				break;
-		const setKey = ""; // Define the 'setKey' variable
-		case SWAP_TOKEN_PAGE:
-			mainContent = <SwapToken key={key} setKey={setKey} />
-			break;
-		const key = ""; // Define the 'key' variable
+		 	case SWAP_TOKEN_PAGE:
+		 		// eslint-disable-next-line no-undef
+		 		mainContent = <SwapToken key={key} setKey={setKey} />
+		 		break;
 	case ADD_LIQUIDITY_PAGE:
+		// eslint-disable-next-line no-undef
 		mainContent = <AddLiquidity key={key} setKey={setKey} />
 		break;
 		 	case TOKEN_LIST_PAGE:
 				mainContent = <TokenListPage />
 		 		break;
 	 	default:
+	 		// eslint-disable-next-line no-unused-vars
 	 		mainContent = <TokenListPage />
 	 		break
 	 }
