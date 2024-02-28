@@ -51,7 +51,7 @@ const SwapTokenComponent = ({ setKey }) => {
 			console.log(JSON.stringify(err))
 		}
 	}
-	const testMethod = async () => {
+		const testMethod = async () => {
 		const storedAccount = getStoredAccount()
 
 		const newToken1 = await createOrGetTokenId("Token1")
@@ -92,6 +92,75 @@ const SwapTokenComponent = ({ setKey }) => {
 	const getMinReceived = (amount, slippage) => {
 		return parseFloat(amount) * ((100 - slippage) / 100)
 	}
+	useEffect(() => {
+		const fetchPrice = async (first, second, amount, setter) => {
+			if (first && second && amount) {
+				try {
+					const priceTuple = await blockchain.query("ft3.get_price", {
+						first: first,
+						second: second,
+						amount: amount
+					})
+					setter(parseFloat(priceTuple?.quote).toFixed(18))
+					setRate(parseFloat(priceTuple?.current_price).toFixed(18))
+				} catch (err) {
+					console.log(err)
+					toast(err.shortReason)
+				}
+			}
+		}
+
+		const checkPair = async (first, second) => {
+			try {
+				const resp = await blockchain.query("ft3.get_pair", {
+					a1: first,
+					a2: second,
+				})
+				JSON.parse(resp)
+				setPairId(firstToken?.id.toString("hex") + "_" + secondToken?.id.toString("hex"))
+			} catch (err) {
+				setPairId("")
+				setRate("")
+				toast("No liquidity found for pair")
+			}
+		}
+
+		if (chromia_account) {
+			loadTokenList()
+		}
+
+		if (firstToken && secondToken) {
+			checkPair(firstToken?.id, secondToken?.id)
+		}
+
+		fetchPrice(firstToken?.id, secondToken?.id, firstTokenAmount, setSecondTokenAmount)
+	}, [chromia_account, loadTokenList, firstToken, secondToken, blockchain, firstTokenAmount, setSecondTokenAmount])
+
+	useEffect(() => {
+		const checkPair = async (first, second) => {
+			try {
+				const resp = await blockchain.query("ft3.get_pair", {
+					a1: first,
+					a2: second,
+				})
+				JSON.parse(resp)
+				setPairId(firstToken?.id.toString("hex") + "_" + secondToken?.id.toString("hex"))
+			} catch (err) {
+				setPairId("")
+				setRate("")
+				toast("No liquidity found for pair")
+			}
+		}
+
+		if (chromia_account) {
+			loadTokenList()
+		}
+
+		if (firstToken && secondToken) {
+			checkPair(firstToken?.id, secondToken?.id)
+		}
+	}, [chromia_account, loadTokenList, firstToken, secondToken, blockchain])
+
 	const fetchPrice = async (first, second, amount, setter) => {
 		if (first && second && amount) {
 			try {
@@ -109,39 +178,13 @@ const SwapTokenComponent = ({ setKey }) => {
 		}
 	}
 
-	const checkPair = async (first, second) => {
-		try {
-			const resp = await blockchain.query("ft3.get_pair", {
-				a1: first,
-				a2: second,
-			})
-			JSON.parse(resp)
-			setPairId(firstToken?.id.toString("hex") + "_" + secondToken?.id.toString("hex"))
-		} catch (err) {
-			setPairId("")
-			setRate("")
-			toast("No liquidity found for pair")
-		}
-	}
-	useEffect(() => {
-		if (chromia_account) {
-			loadTokenList()
-		}
-	}, [chromia_account?.id])
-
-	useEffect(() => {
-		if (firstToken && secondToken) {
-			checkPair(firstToken?.id, secondToken?.id)
-		}
-	}, [firstToken?.id.toString("hex"), secondToken?.id.toString("hex")])
-
 	useEffect(() => {
 		if (pairId) {
 			if (firstTokenAmount) {
 				fetchPrice(firstToken?.id, secondToken?.id, firstTokenAmount, setSecondTokenAmount)
 			}
 		}
-	}, [pairId, firstTokenAmount])
+	}, [pairId, secondToken, firstTokenAmount, firstToken, setSecondTokenAmount])
 
 	let modalCallback = () => { }
 	let modalTokenList = []
