@@ -47,7 +47,7 @@ const CreateTokenComponent = ({ setKey }) => {
 				<div className="row mb-32 gy-32">
 					<div className="col-12">
 						<div className="row bg-black-0 hp-bg-color-dark-100 rounded pe-16 pe-sm-32 mx-0 create-token">
-							{/* <TokenSteps /> */}
+							 <TokenSteps />
 							<TokenInfoForm callback={createTokenCallback} />
 						</div>
 					</div>
