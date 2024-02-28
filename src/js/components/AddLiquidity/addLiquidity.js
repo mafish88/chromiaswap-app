@@ -147,7 +147,7 @@ const AddLiquidityComponent = ({ setKey }) => {
 												}
 											}}
 										/>
-										{/* <span className="font-xs px-3 text-gray-400">= $0.00</span> */}
+										 <span className="font-xs px-3 text-gray-400">= $0.00</span> 
 									</div>
 								</div>
 								<div className="absolute top-1/2 left-1/2 z-[1] -mt-4 -ml-4 rounded-full shadow-large dark:bg-gray-600">
@@ -194,14 +194,14 @@ const AddLiquidityComponent = ({ setKey }) => {
 												}
 											}}
 										/>
-										{/* <span className="font-xs px-3 text-gray-400">= $0.00</span> */}
+										 <span className="font-xs px-3 text-gray-400">= $0.00</span> 
 									</div>
 								</div>
 							</div>
 						</div>
 						<div className="flex flex-col gap-4 xs:gap-[18px]">
-							{/* <div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">13.77 eth per btc</span><span>0%</span></div>
-					<div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">0.072631 Btc per ETH</span><span>Share of Pool</span></div> */}
+							<div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">13.77 eth per btc</span><span>0%</span></div>
+					<div className="flex items-center justify-between dark:text-gray-300"><span className="font-medium">0.072631 Btc per ETH</span><span>Share of Pool</span></div> 
 						</div>
 						<br />
 						<div

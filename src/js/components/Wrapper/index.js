@@ -11,6 +11,10 @@ import { ADD_LIQUIDITY_PAGE, chainId, CREATE_TOKEN_PAGE, ROUTES, SWAP_TOKEN_PAGE
 import { setStoredAccount } from "../../../lib/account-storage";
 import LoadingOverlay from "react-loading-overlay";
 import { PuffLoader } from "react-spinners";
+import CreateToken from "../CreateToken";
+import SwapToken from "../SwapToken";
+import AddLiquidity from "../AddLiquidity";
+import TokenListPage from "../TokenListPage";
 
 const Wrapper = ({ children }) => {
 	const { page, chromia_account, setAccount, changePage, pageLoaded, is_page_loaded } = useContext(AppContext)
@@ -68,24 +72,26 @@ const Wrapper = ({ children }) => {
 		updatePage()
 	}, []);
 
-	// let mainContent = null
-	// switch (page) {
-	// 	case CREATE_TOKEN_PAGE:
-	// 		mainContent = <CreateToken />
-	// 		break;
-	// 	case SWAP_TOKEN_PAGE:
-	// 		mainContent = <SwapToken key={key} setKey={setKey} />
-	// 		break;
-	// 	case ADD_LIQUIDITY_PAGE:
-	// 		mainContent = <AddLiquidity key={key} setKey={setKey} />
-	// 		break;
-	// 	case TOKEN_LIST_PAGE:
-	// 		mainContent = <TokenListPage />
-	// 		break;
-	// 	default:
-	// 		mainContent = <TokenListPage />
-	// 		break
-	// }
+	 let mainContent = null
+	 switch (page) {
+		 	case CREATE_TOKEN_PAGE:
+				mainContent = <CreateToken />
+				break;
+		const setKey = ""; // Define the 'setKey' variable
+		case SWAP_TOKEN_PAGE:
+			mainContent = <SwapToken key={key} setKey={setKey} />
+			break;
+		const key = ""; // Define the 'key' variable
+	case ADD_LIQUIDITY_PAGE:
+		mainContent = <AddLiquidity key={key} setKey={setKey} />
+		break;
+		 	case TOKEN_LIST_PAGE:
+				mainContent = <TokenListPage />
+		 		break;
+	 	default:
+	 		mainContent = <TokenListPage />
+	 		break
+	 }
 	if (!is_page_loaded) {
 		return (<LoadingOverlay
 			className="hp-main-layout-content"
